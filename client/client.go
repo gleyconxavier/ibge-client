@@ -6,7 +6,7 @@ import (
 	"github.com/parnurzeal/gorequest"
 )
 
-func (c *Client) request () (superAgent *gorequest.SuperAgent) {
+func (c *Client) request() (superAgent *gorequest.SuperAgent) {
 	if c.superAgent != nil {
 		return c.superAgent
 	}
@@ -55,11 +55,38 @@ func (c *Client) GetCountiesByUF(codState int64) (counties []County, err error) 
 	return
 }
 
-func (c *Client) GetCountyByAcronymStateAndNameCounty(acronymState, name string) (county County, equivalencePercentagem int64, err error) {
+func (c *Client) GetCountyByIbgeCode(ibgeCode int64) (county County, err error) {
+	if ibgeCode == 0 {
+		err = errors.New("it is mandatory to inform the ibge code to perform this query")
+		return
+	}
+
+	_, _, errs := c.get(fmt.Sprintf("/localidades/municipios/%d", ibgeCode)).EndStruct(&county, logFile)
+	if len(errs) > 0 {
+		err = errs[0]
+		return
+	}
+
+	return
+}
+
+func (c *Client) GetCountyByAcronymStateAndNameCounty(acronymState, name string, ibge_code int64) (county County, equivalencePercentagem int64, err error) {
 
 	var codState int64
 	county = County{}
 	equivalencePercentagem = 0
+
+	if ibge_code > 0 {
+		county, err = c.GetCountyByIbgeCode(ibge_code)
+		if err != nil {
+			return
+		}
+
+		if county.ID > 0 {
+			equivalencePercentagem = 100
+		}
+		return
+	}
 
 	states, err := c.GetStates()
 	if err != nil {
@@ -93,11 +120,11 @@ func (c *Client) GetCountyByAcronymStateAndNameCounty(acronymState, name string)
 			county = coun
 			return
 		}
-		if len(coun.Name) < len (name) {
+		if len(coun.Name) < len(name) {
 			var countEquals = 0
 			for i := 0; i < len(coun.Name); i++ {
 				if coun.Name[i] == name[i] {
-					countEquals ++
+					countEquals++
 				}
 			}
 			percecentagem := (countEquals / len(coun.Name)) * 100
@@ -111,7 +138,7 @@ func (c *Client) GetCountyByAcronymStateAndNameCounty(acronymState, name string)
 			var countEquals = 0
 			for i := 0; i < len(name); i++ {
 				if coun.Name[i] == name[i] {
-					countEquals ++
+					countEquals++
 				}
 			}
 			percecentagem := (countEquals / len(name)) * 100
