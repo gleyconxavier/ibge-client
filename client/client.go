@@ -46,7 +46,7 @@ func (c *Client) GetCounties() (counties []County, err error) {
 func (c *Client) GetCountiesByUF(codState int64) (counties []County, err error) {
 	counties = []County{}
 
-	_, _, errs := c.get(fmt.Sprintf("/localidades/estados/%s/municipios?orderBy=nome", codState)).EndStruct(&counties, logFile)
+	_, _, errs := c.get(fmt.Sprintf("/localidades/estados/%d/municipios?orderBy=nome", int(codState))).EndStruct(&counties, logFile)
 	if len(errs) > 0 {
 		err = errs[0]
 		return
