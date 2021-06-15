@@ -8,6 +8,8 @@ require (
 	github.com/fatih/color v1.12.0 // indirect
 	github.com/jmoiron/sqlx v1.3.4
 	github.com/parnurzeal/gorequest v0.2.16
+	github.com/paulmach/go.geo v0.0.0-20180829195134-22b514266d33
+	github.com/paulmach/go.geojson v1.4.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	golang.org/x/net v0.0.0-20210610132358-84b48f89b13b // indirect
