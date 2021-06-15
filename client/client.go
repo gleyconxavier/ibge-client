@@ -171,7 +171,7 @@ func (c *Client) GetCountyByAcronymStateAndNameCounty(acronymState, name string,
 	return
 }
 
-func (c Client) GetGeocode(acronymState, name string) (point *geo.Point, err error) {
+func (c Client) GetGeocode(name, acronymState string) (point *geo.Point, err error) {
 	tempStruct := struct {
 		Info struct {
 			Statuscode int `json:"statuscode"`
