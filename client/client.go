@@ -144,12 +144,13 @@ func (c *Client) GetCountyByAcronymStateAndNameCounty(acronymState, name string,
 		mNameParam := make(map[string]string, len(nameParam))
 
 		for _, p := range nameParam {
-			mNameParam[p] = p
+			mNameParam[strings.ToUpper(p)] = p
 		}
 
 		var countEquals = 0
 
 		for _, c := range nameCounty {
+			c = strings.ToUpper(c)
 			if _, exist := mNameParam[c]; exist {
 				countEquals++
 				delete(mNameParam, c)
