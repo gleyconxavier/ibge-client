@@ -3,7 +3,6 @@ package client
 import (
 	"errors"
 	"fmt"
-	"github.com/eucatur/go-toolbox/check"
 	"github.com/parnurzeal/gorequest"
 	geo "github.com/paulmach/go.geo"
 	"sort"
@@ -142,25 +141,24 @@ func (c *Client) GetCountyByAcronymStateAndNameCounty(acronymState, name string,
 		nameParam := strings.Split(name, " ")
 		sort.Strings(nameParam)
 
-		mirrorNameSlice := check.If(len(nameCounty) > len(nameParam), len(nameParam), len(nameCounty)).(int)
+		mNameParam := make(map[string]string, len(nameParam))
+
+		for _, p := range nameParam {
+			mNameParam[p] = p
+		}
 
 		var countEquals = 0
 
-		for i := 0; i < mirrorNameSlice; i++ {
-			if len(nameCounty[i]) < len(nameParam[i]) {
-				if strings.Contains(nameParam[i], nameCounty[i]) {
-					countEquals++
-				}
-			} else {
-				if strings.Contains(nameCounty[i], nameParam[i]) {
-					countEquals++
-				}
+		for _, c := range nameCounty {
+			if _, exist := mNameParam[c]; exist {
+				countEquals++
+				delete(mNameParam, c)
 			}
 		}
 
-		percecentagem := (countEquals / len(coun.Name)) * 100
+		percecentagem := (countEquals / len(nameCounty)) * 100
 
-		if percecentagem > 90 {
+		if percecentagem > 50 {
 			county = coun
 			equivalencePercentagem = int64(percecentagem)
 			county.Point, err = c.GetGeocode(county.Name, county.MicroRegion.MesorRegion.State.Acronym)
