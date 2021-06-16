@@ -157,7 +157,7 @@ func (c *Client) GetCountyByAcronymStateAndNameCounty(acronymState, name string,
 			}
 		}
 
-		percecentagem := (countEquals / len(nameCounty)) * 100
+		var percecentagem float64 = float64((countEquals / len(nameCounty)) * 100)
 
 		if percecentagem > 50 {
 			county = coun
