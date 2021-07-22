@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"github.com/parnurzeal/gorequest"
 	geo "github.com/paulmach/go.geo"
-	"sort"
-	"strings"
 )
 
 func (c *Client) request() (superAgent *gorequest.SuperAgent) {
@@ -132,37 +130,6 @@ func (c *Client) GetCountyByAcronymStateAndNameCounty(acronymState, name string,
 			if c.HostGeocode != "" && c.KeyGeocode != "" {
 				county.Point, err = c.GetGeocode(county.Name, county.MicroRegion.MesorRegion.State.Acronym)
 			}
-			return
-		}
-
-		nameCounty := strings.Split(coun.Name, " ")
-		sort.Strings(nameCounty)
-
-		nameParam := strings.Split(name, " ")
-		sort.Strings(nameParam)
-
-		mNameParam := make(map[string]string, len(nameParam))
-
-		for _, p := range nameParam {
-			mNameParam[strings.ToUpper(p)] = p
-		}
-
-		var countEquals = 0
-
-		for _, c := range nameCounty {
-			c = strings.ToUpper(c)
-			if _, exist := mNameParam[c]; exist {
-				countEquals++
-				delete(mNameParam, c)
-			}
-		}
-
-		var percecentagem float64 = float64(countEquals) / float64(len(nameCounty)) * 100
-
-		if percecentagem > 50 {
-			county = coun
-			equivalencePercentagem = int64(percecentagem)
-			county.Point, err = c.GetGeocode(county.Name, county.MicroRegion.MesorRegion.State.Acronym)
 			return
 		}
 	}
