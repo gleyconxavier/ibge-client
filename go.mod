@@ -12,6 +12,6 @@ require (
 	github.com/paulmach/go.geojson v1.4.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/smartystreets/goconvey v1.6.4 // indirect
-	golang.org/x/net v0.0.0-20210610132358-84b48f89b13b // indirect
+	golang.org/x/net v0.7.0 // indirect
 	moul.io/http2curl v1.0.0 // indirect
 )
